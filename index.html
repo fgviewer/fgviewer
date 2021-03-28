@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+    <title>test</title>
+    <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js"></script>
+    <script src="fg.js"></script>
+    <link rel="stylesheet" href="fg.css">
+</head>
+<body> 
+    <div class="flex_container visible" id="fgmenu">
+        <div class="visible"></div>
+        <form id="menu" class="visible">
+            <label for="menu_text">Link to thread:</label><br>
+            <input type="text" id="menu_text" value="https://boards.4chan.org/h/thread/6110391" ><br>            
+            <input type="button" id="menu_submit" value="Start">
+        </form>
+        <div class="visible"></div>
+    </div>  
+
+    <div class="flex_container hidden" id="fgmain">
+        <div id="text"></div>
+        <video class="video_player hidden">
+            <source id="video_source" src =""/>
+        </video>
+        <img class="display visible" src="" />
+        <img class="preload hidden" src="" />
+        <canvas id="beatbar">
+
+        </canvas>
+    </div>
+</body>
