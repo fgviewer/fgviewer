@@ -16,7 +16,7 @@ function getImgArr(link){
     }).responseText;
 
     $.each($(filesq).find(".file"), function(){
-        imgurl = "https:"+$(this).children(".fileThumb").attr("href");
+        imgurl = "http:"+$(this).children(".fileThumb").attr("href");
         content = $(this).siblings("blockquote").text();
         tmp = []
         tmp.push(imgurl);
@@ -109,7 +109,7 @@ class FgManager{
         this.stopflag=false;
         this.reexp = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast), ([a-zA-Z0-9 ]+)");
         this.last_image_time = Date.now();
-        this.iterator = -1;
+        this.iterator = 0;
         this.next_image_time = 0;
 
         this.queue_image();
@@ -143,13 +143,13 @@ class FgManager{
             this.next_image_time = this.next_next_time;
             this.text = this.next_text;
             this.textobj.html(this.text);
-            this.textobj.fitText();
             if(this.textobj.html()==""){
                 this.textobj.addClass("hidden");
             }else{
                 this.textobj.removeClass("hidden");
+                
             }
-
+            this.textobj.css("font-size",window.height/21+"px");
             this.queue_image();
             $(this.img_selector).attr("src",this.dataarr[this.iterator][0])
 
@@ -169,16 +169,6 @@ class FgManager{
 
 
 //core logic above, site logic below
-
-async function show_images(arr){
-    $("img.display").attr("src",arr[0][0]);
-
-    for(var i = 0; i < arr.length;i++){
-        $("img.preload").attr("src",arr[i][0]);
-        await sleep(5000);
-        $("img.display").attr("src",arr[i][0]);
-    };
-}
 
 fgm = null;
 function main_loop(){
