@@ -109,7 +109,7 @@ class FgManager{
         this.stopflag=false;
         this.reexp = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast), ([a-zA-Z0-9 ]+)");
         this.last_image_time = Date.now();
-        this.iterator = 0;
+        this.iterator = -1;
         this.next_image_time = 0;
 
         this.queue_image();
