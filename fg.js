@@ -128,7 +128,7 @@ class FgManager{
                 {
                     tmp = data[2];
                     data[2] = data[3];
-                    data[2] = tmp;
+                    data[3] = tmp;
                 }
             }
             if(data != null){
