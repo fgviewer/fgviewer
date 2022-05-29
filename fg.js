@@ -97,7 +97,7 @@ class FgManager{
         "normal":60,
         "medium":60,
         "fast":80,
-        "vary fast":100,
+        "very fast":100,
         "extreme fast":140,
         "extremely fast":140,
     }
