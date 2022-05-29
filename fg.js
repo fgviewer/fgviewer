@@ -108,6 +108,7 @@ class FgManager{
         this.dataarr = arr;
         this.stopflag=false;
         this.reexp = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast), ([a-zA-Z0-9 ]+)");
+        this.reexpalt = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), ([a-zA-Z0-9 ]+), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast)");
         this.last_image_time = Date.now();
         this.iterator = -1;
         this.next_image_time = 0;
@@ -120,6 +121,10 @@ class FgManager{
         if(this.dataarr.length > this.iterator+1){
             $(this.preload_selector).attr("src",arr[this.iterator+1][0]);
             var data = this.reexp.exec(arr[this.iterator+1][1]);
+            if(data == null)
+            {
+                data = this.reexpalt.exec(arr[this.iterator+1][1]);
+            }
             if(data != null){
                 console.log(data);
                 var count = data[1];
