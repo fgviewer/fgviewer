@@ -124,6 +124,12 @@ class FgManager{
             if(data == null)
             {
                 data = this.reexpalt.exec(arr[this.iterator+1][1]);
+                if(data != null)
+                {
+                    tmp = data[2];
+                    data[2] = data[3];
+                    data[2] = tmp;
+                }
             }
             if(data != null){
                 console.log(data);
