@@ -29,6 +29,16 @@ function getImgArr(link){
     return arr;
 }
 
+class Beat
+{
+    constructor(delay)
+    {
+        this.delay = delay;
+        this.sound_played = false;
+        this.beatsound = new Audio('beat.wav');
+    }
+}
+
 class Beatbar{
     constructor(JQbeatbarcanvas){
         this.canvas= JQbeatbarcanvas[0];
@@ -45,7 +55,7 @@ class Beatbar{
                 this.final_element_delay = 0;
             }
             this.final_element_delay += delay;
-            this.queue.push(this.final_element_delay);
+            this.queue.push(new Beat(this.final_element_delay));
         }
     }
     draw(){
@@ -65,17 +75,25 @@ class Beatbar{
 
         
         while(i<this.queue.length){
-            this.queue[i] -= deltat;
-            distance = this.queue[i];
+            this.queue[i].delay -= deltat;
+            distance = this.queue[i].delay;
+            sound_played = this.queue[i].sound_played;
             if(distance < -this.beatbartimelength - 10000){
                 this.queue.splice(i,1);
-                i++;
+                //i++; I don't think this increment is neccesary, another object will be at same index after splicing
                 continue;
             }
             if(distance < this.beatbartimelength){
                 this.context.arc(centerw+centerw*(distance/this.beatbartimelength),centerh,0.4*height,0,2*Math.PI);
                 this.context.fill();
             };
+
+            if(distance < 0 && !sound_played)
+            {
+                this.queue[i].beatsound.play();
+                this.queue[i].sound_played = true;
+            }
+
             i++;
             continue;
         }
