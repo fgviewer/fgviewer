@@ -126,7 +126,7 @@ class FgManager{
                 var delay = 60000/FgManager.speeds[data[2]];
                 if (count * delay > this.max_durration)
                 {
-                    count = ceil(this.max_durration /delay)
+                    count = Math.ceil(this.max_durration /delay)
                 }
                 this.beatbar.addToQueue(count,delay)
                 this.next_text = data[3];
@@ -138,7 +138,7 @@ class FgManager{
 
                 if (count * delay > this.max_durration)
                 {
-                    count = ceil(this.max_durration /delay)
+                    count = Math.ceil(this.max_durration /delay)
                 }
                 this.beatbar.addToQueue(count,delay)
                 this.next_text = "";
