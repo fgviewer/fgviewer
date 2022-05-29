@@ -111,7 +111,7 @@ class FgManager{
         this.last_image_time = Date.now();
         this.iterator = -1;
         this.next_image_time = 0;
-        this.max_durration = isNaN(max_durration) ? 20 : max_durration;
+        this.max_durration = isNaN(max_durration) ? 20 * 1000 : max_durration * 1000;
 
         this.queue_image();
         this.iterator++;
