@@ -200,6 +200,8 @@ function main_loop(){
     
 window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
+        this.localStorage.setItem("last_url", $("#menu_text").val())
+        this.localStorage.setItem("last_len", $("#menu_length").val())
         arr = getImgArr("https://fgproxy1.herokuapp.com/" + $("#menu_text").val());
         if(arr.length != 0){
 
@@ -214,4 +216,14 @@ window.addEventListener("load",function(){
             alert("couldn't find any images in that thread");
         }
     })
+    var last_url = this.localStorage.getItem("last_url")
+    var last_len = this.localStorage.getItem("last_len")
+    if( last_url != null)
+    {
+        $("#menu_text").val(last_url)
+    }
+    if( last_len != null)
+    {
+        $("#menu_length").val(last_len)
+    }
 })
