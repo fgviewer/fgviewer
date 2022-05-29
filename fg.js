@@ -100,7 +100,7 @@ class FgManager{
         "extreme fast":140,
         "extremely fast":140,
     }
-    constructor(arr,img_selector,preload_selector, textjqobject, beatbar){
+    constructor(arr,img_selector,preload_selector, textjqobject, beatbar, max_durration){
         this.img_selector = img_selector;
         this.preload_selector = preload_selector;
         this.textobj = textjqobject;
@@ -111,6 +111,7 @@ class FgManager{
         this.last_image_time = Date.now();
         this.iterator = -1;
         this.next_image_time = 0;
+        this.max_durration = isNaN(max_durration) ? 20 : max_durration;
 
         this.queue_image();
         this.iterator++;
@@ -123,6 +124,10 @@ class FgManager{
                 console.log(data);
                 var count = data[1];
                 var delay = 60000/FgManager.speeds[data[2]];
+                if (count * delay > this.max_durration)
+                {
+                    count = ceil(this.max_durration /delay)
+                }
                 this.beatbar.addToQueue(count,delay)
                 this.next_text = data[3];
                 this.next_next_time = delay * count;
@@ -130,6 +135,11 @@ class FgManager{
             }else{
                 var count = 10+Math.ceil(Math.random()*40);
                 var delay = 60000/(40+Math.ceil(Math.random()*80));
+
+                if (count * delay > this.max_durration)
+                {
+                    count = ceil(this.max_durration /delay)
+                }
                 this.beatbar.addToQueue(count,delay)
                 this.next_text = "";
                 this.next_next_time = delay * count;
@@ -178,14 +188,14 @@ function main_loop(){
     
 window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
-        arr = getImgArr("https://fgproxy1.herokuapp.com/http://boards.4chan.org/h/thread/6110391/fap-gauntlet-13");
+        arr = getImgArr("https://fgproxy1.herokuapp.com/" + $("#menu_text").val());
         if(arr.length != 0){
 
             $("#fgmain").addClass("visible");
             $("#fgmenu").addClass("hidden");
             $("#fgmain").removeClass("hidden");
             $("#fgmenu").removeClass("visible");
-            fgm = new FgManager(arr,"img.display","img.preload",$("div#text"),new Beatbar($("#beatbar")));
+            fgm = new FgManager(arr,"img.display","img.preload",$("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()));
             
             requestAnimationFrame(main_loop);
         }else{
