@@ -70,14 +70,12 @@ class Beatbar{
         this.context = this.canvas.getContext("2d");
         this.context.fillStyle = 'rgb(200, 50, 50)';
 
-        var distance = 0;
         var i = 0;
-
         
         while(i<this.queue.length){
             this.queue[i].delay -= deltat;
-            distance = this.queue[i].delay;
-            sound_played = this.queue[i].sound_played;
+            var distance = this.queue[i].delay;
+            var sound_played = this.queue[i].sound_played;
             if(distance < -this.beatbartimelength - 10000){
                 this.queue.splice(i,1);
                 //i++; I don't think this increment is neccesary, another object will be at same index after splicing
