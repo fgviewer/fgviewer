@@ -40,11 +40,11 @@ img{
 }
 #menu > div > *{
     vertical-align: middle;
-    background-color: white;
 }
 
 #menu > div{
     margin: 5px;
+    background-color: white;
 }
 #menu > input{
     clear:right;
