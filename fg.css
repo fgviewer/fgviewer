@@ -38,8 +38,13 @@ img{
 #menu > #menu_submit{
     max-height:30%;
 }
-#menu > *{
+#menu > div > *{
     vertical-align: middle;
+    background-color: white;
+}
+
+#menu > div{
+    margin: 5px;
 }
 #menu > input{
     clear:right;
