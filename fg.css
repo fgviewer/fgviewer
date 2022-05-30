@@ -31,11 +31,18 @@ img{
     border-style: solid;
     border-width: 1px;
 }
+#menu > #menu_length{
+    border-style: solid;
+    border-width: 1px;
+}
 #menu > #menu_submit{
     max-height:30%;
 }
 #menu > *{
     vertical-align: middle;
+}
+#menu > input{
+    clear:right;
 }
 
 #beatbar{
