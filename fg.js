@@ -266,7 +266,7 @@ window.addEventListener("load",function(){
     var mode = window.localStorage.getItem("nightmode");
     if( mode != null )
     {
-        if( mode == false )
+        if( mode == "false" )
         {
             $("#night_mode").attr("checked", false);
             changeNightMode();
