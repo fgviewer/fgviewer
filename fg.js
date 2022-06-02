@@ -220,15 +220,15 @@ function changeNightMode()
 {
     if(nightmode)
     {
-        $('body').css("background-color", "rgb(10,10,30)");
+        $('body').css("background-color", "rgb(255,255,255)");
         nightmode = false;
         window.localStorage.setItem("nightmode", false);
     }
     else
     {
-    $('body').css("background-color", "rgb(10,10,30)");
-    nightmode = true;
-    window.localStorage.setItem("nightmode", true);
+        $('body').css("background-color", "rgb(10,10,30)");
+        nightmode = true;
+        window.localStorage.setItem("nightmode", true);
     }
 }
     
