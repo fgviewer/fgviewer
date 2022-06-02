@@ -213,6 +213,24 @@ function main_loop(){
     fgm.main_loop();
     requestAnimationFrame(main_loop);
 }
+
+
+var nightmode = true;
+function changeNightMode()
+{
+    if(nightmode)
+    {
+        $('body').css("background-color", "rgb(10,10,30)");
+        nightmode = false;
+        window.localStorage.setItem("nightmode", false);
+    }
+    else
+    {
+    $('body').css("background-color", "rgb(10,10,30)");
+    nightmode = true;
+    window.localStorage.setItem("nightmode", true);
+    }
+}
     
 window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
@@ -231,7 +249,10 @@ window.addEventListener("load",function(){
         }else{
             alert("couldn't find any images in that thread");
         }
-    })
+    });
+
+    $("#night_mode").on("click",changeNightMode);
+
     var last_url = window.localStorage.getItem("last_url")
     var last_len = window.localStorage.getItem("last_len")
     if( last_url != null)
@@ -241,5 +262,14 @@ window.addEventListener("load",function(){
     if( last_len != null)
     {
         $("#menu_length").val(last_len)
+    }
+    var mode = window.localStorage.getItem("nightmode");
+    if( mode != null )
+    {
+        if( mode == false )
+        {
+            $("#night_mode").attr("checked", false);
+            changeNightMode();
+        }
     }
 })

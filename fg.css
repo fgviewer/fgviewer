@@ -6,6 +6,7 @@
     height: 100% !important;
     height:auto;
     margin:auto;
+    flex-direction: column;
 }
 .flex_container{
     max-height: 100%;
