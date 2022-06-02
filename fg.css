@@ -6,6 +6,7 @@
     height: 100% !important;
     height:auto;
     margin:auto;
+    flex-direction: column;
 }
 .flex_container{
     max-height: 100%;
@@ -31,11 +32,23 @@ img{
     border-style: solid;
     border-width: 1px;
 }
+#menu > #menu_length{
+    border-style: solid;
+    border-width: 1px;
+}
 #menu > #menu_submit{
     max-height:30%;
 }
-#menu > *{
+#menu > div > *{
     vertical-align: middle;
+}
+
+#menu > div{
+    margin: 5px;
+    background-color: white;
+}
+#menu > input{
+    clear:right;
 }
 
 #beatbar{
@@ -66,4 +79,5 @@ div#text{
 }
 html,body{
     height: 100%;
+    background-color: rgb(10,10,30);
 }
