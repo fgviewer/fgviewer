@@ -1,5 +1,25 @@
-const sleep = (milliseconds) => {
+const sleep = (milliseconds) => 
+{
     return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
+function shuffle(array) 
+{
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
 }
 
 function getImgArr(link){
@@ -117,7 +137,12 @@ class FgManager{
         "extreme fast":140,
         "extremely fast":140,
     }
-    constructor(arr,img_selector,preload_selector, textjqobject, beatbar, max_durration){
+    constructor(arr,img_selector,preload_selector, textjqobject, beatbar, max_durration, randomized){
+
+        if(randomized)
+        {
+            arr = shuffle(arr);
+        }
         this.img_selector = img_selector;
         this.preload_selector = preload_selector;
         this.textobj = textjqobject;
@@ -243,7 +268,7 @@ window.addEventListener("load",function(){
             $("#fgmenu").addClass("hidden");
             $("#fgmain").removeClass("hidden");
             $("#fgmenu").removeClass("visible");
-            fgm = new FgManager(arr,"img.display","img.preload",$("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()));
+            fgm = new FgManager(arr,"img.display","img.preload",$("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").attr("checked"));
             
             requestAnimationFrame(main_loop);
         }else{
@@ -270,6 +295,14 @@ window.addEventListener("load",function(){
         {
             $("#night_mode").attr("checked", false);
             changeNightMode();
+        }
+    }
+    var randomized = window.localStorage.getItem("random");
+    if( randomized != null )
+    {
+        if( randomized == "true" )
+        {
+            $("#randomize").attr("checked", true);
         }
     }
 })
