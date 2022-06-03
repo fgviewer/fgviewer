@@ -261,7 +261,7 @@ window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
         window.localStorage.setItem("last_url", $("#menu_text").val())
         window.localStorage.setItem("last_len", $("#menu_length").val())
-        window.localStorage.getItem("random",$("#randomize").is(":checked"))
+        window.localStorage.setItem("random",$("#randomize").is(":checked"))
         arr = getImgArr("https://fgproxy1.herokuapp.com/" + $("#menu_text").val());
         if(arr.length != 0){
 
