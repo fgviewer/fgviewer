@@ -261,7 +261,7 @@ window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
         window.localStorage.setItem("last_url", $("#menu_text").val())
         window.localStorage.setItem("last_len", $("#menu_length").val())
-        window.localStorage.getItem("random",$("#randomize").attr("checked"))
+        window.localStorage.getItem("random",$("#randomize").is(":checked"))
         arr = getImgArr("https://fgproxy1.herokuapp.com/" + $("#menu_text").val());
         if(arr.length != 0){
 
@@ -269,7 +269,7 @@ window.addEventListener("load",function(){
             $("#fgmenu").addClass("hidden");
             $("#fgmain").removeClass("hidden");
             $("#fgmenu").removeClass("visible");
-            fgm = new FgManager(arr,"img.display","img.preload",$("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").attr("checked"));
+            fgm = new FgManager(arr,"img.display","img.preload",$("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").is(":checked"));
             
             requestAnimationFrame(main_loop);
         }else{
