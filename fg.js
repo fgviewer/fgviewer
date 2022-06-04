@@ -41,12 +41,31 @@ function getImgArr(link){
         tmp = []
         tmp.push(imgurl);
         tmp.push(content);
-        arr.push(tmp);
+        arr.push(new Displayable(tmp));
     });
 
     console.log(arr);
 
     return arr;
+}
+
+class Displayable
+{
+    static video_formats = [".webm",".mp4",".mkv"]
+    constructor(data_arr)
+    {
+        this.imgurl = data_arr[0]
+        this.text = data_arr[1]
+        this.is_video = false;
+        for(var i = 0; i< Displayable.video_formats.length; i++)
+        {
+            if(data_arr[0].endsWith(Displayable.video_formats[i]))
+            {
+                this.is_video = true;
+                break;
+            }
+        }
+    }
 }
 
 class Beat
@@ -101,7 +120,7 @@ class Beatbar{
                 //i++; I don't think this increment is neccesary, another object will be at same index after splicing
                 continue;
             }
-            if(distance < this.beatbartimelength){
+            if(distance < this.beatbartimelength + 0.5*height){
                 this.context.arc(centerw+centerw*(distance/this.beatbartimelength),centerh,0.4*height,0,2*Math.PI);
                 this.context.fill();
             };
@@ -127,6 +146,7 @@ class Beatbar{
 }
 
 class FgManager{
+    
     static speeds = {//strokes per minute; adjust
         "very slow":20,
         "slow":40,
@@ -137,43 +157,89 @@ class FgManager{
         "extreme fast":140,
         "extremely fast":140,
     }
-    constructor(arr,img_selector,preload_selector, textjqobject, beatbar, max_durration, randomized){
 
+    constructor(arr,img_selector,preload_selector,video_selector, video_preload_selector, textjqobject, beatbar, max_durration, randomized, mute_video)
+    {
         if(randomized)
         {
             arr = shuffle(arr);
         }
         this.img_selector = img_selector;
         this.preload_selector = preload_selector;
+        this.video_selector = video_selector;
+        this.video_preload_selector = video_preload_selector;
         this.textobj = textjqobject;
         this.beatbar = beatbar;
         this.dataarr = arr;
         this.stopflag=false;
-        this.reexp = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast), ([a-zA-Z0-9 ]+)");
-        this.reexpalt = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), ([a-zA-Z0-9 ]+), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast)");
+        this.reexp = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast), ([^,]+)");
+        this.reexpalt = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), ([^,]+), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast)");
         this.last_image_time = Date.now();
         this.iterator = -1;
         this.next_image_time = 0;
         this.max_durration = isNaN(max_durration) ? 20 * 1000 : max_durration * 1000;
+        this.mute_video = mute_video;
+        this.last_was_image = -1;
+
 
         this.queue_image();
         this.iterator++;
     }
-    queue_image(){
-        if(this.dataarr.length > this.iterator+1){
-            $(this.preload_selector).attr("src",arr[this.iterator+1][0]);
-            var data = this.reexp.exec(arr[this.iterator+1][1]);
-            if(data == null)
+
+    extract_data_from_string(str, regex, regex_alt)
+    {
+        // try pattern 1
+        var data = regex.exec(str);
+                    
+        // Some people write "normal" or "medium" (grip) and then specify speed.
+        // Check if somebody didn't do that here.
+        // If they did, use alt regex.
+        if(data != null && (data[2] == "medium" || data[2] == "normal") && !(data[3].includes("medium") || data[3].includes("normal")) )
+        {
+            var alt = regex_alt.exec(str);
+            if (alt != null)
             {
-                data = this.reexpalt.exec(arr[this.iterator+1][1]);
-                if(data != null)
-                {
-                    tmp = data[2];
-                    data[2] = data[3];
-                    data[3] = tmp;
-                }
+                data = alt;
+                tmp = data[2];
+                data[2] = data[3];
+                data[3] = tmp;
             }
-            if(data != null){
+        }
+
+        if(data == null)
+        {
+            data = regex_alt.exec(str);
+            if(data != null)
+            {
+                tmp = data[2];
+                data[2] = data[3];
+                data[3] = tmp;
+            }
+        }
+
+        return data;
+    }
+
+    queue_image()
+    {
+        if(this.dataarr.length > this.iterator+1){
+
+            if(this.dataarr[this.iterator+1].is_video)
+            {
+                //preload next video
+                $(this.video_preload_selector + ">source").attr("src",this.dataarr[this.iterator+1].imgurl);
+                $(this.video_preload_selector)[0].muted = true;
+            }
+            else
+            {
+                // preload next image
+                $(this.preload_selector).attr("src",this.dataarr[this.iterator+1].imgurl);
+            }
+
+            var data = this.extract_data_from_string(this.dataarr[this.iterator+1].text, this.reexp, this.reexpalt)
+
+            if(data != null)
+            {
                 console.log(data);
                 var count = data[1];
                 var delay = 60000/FgManager.speeds[data[2]];
@@ -185,13 +251,15 @@ class FgManager{
                 this.next_text = data[3];
                 this.next_next_time = delay * count;
 
-            }else{
-                var count = 10+Math.ceil(Math.random()*40);
+            }
+            else
+            {
                 var delay = 60000/(40+Math.ceil(Math.random()*80));
-
+                var count = 10+Math.ceil(Math.random()* (this.max_durration/delay - 10));
+                
                 if (count * delay > this.max_durration)
                 {
-                    count = Math.ceil(this.max_durration /delay)
+                    count = Math.ceil(this.max_durration / delay)
                 }
                 this.beatbar.addToQueue(count,delay)
                 this.next_text = "";
@@ -199,6 +267,7 @@ class FgManager{
             }
         }
     }
+
     fglogic(){
         if(Date.now()-this.last_image_time > this.next_image_time && this.iterator < this.dataarr.length){
 
@@ -214,7 +283,37 @@ class FgManager{
             }
             this.textobj.css("font-size",window.height/21+"px");
             this.queue_image();
-            $(this.img_selector).attr("src",this.dataarr[this.iterator][0])
+            var to_display = this.dataarr[this.iterator];
+            if(to_display.is_video)
+            {
+                $(this.video_selector).attr("src",to_display.imgurl)
+                if(this.mute_video)
+                {
+                    // Why is this needed...
+                    // Browsers are tretarded.
+                    $(this.video_selector)[0].muted = true;
+                }
+                if(this.last_was_image != 0)
+                {
+                    $(this.img_selector).addClass("hidden");
+                    $(this.img_selector).removeClass("visible");
+                    $(this.video_selector).addClass("visible");
+                    $(this.video_selector).removeClass("hidden");
+                    this.last_was_image = 0;
+                }
+            }
+            else
+            {
+                $(this.img_selector).attr("src",to_display.imgurl)
+                if(this.last_was_image != 1)
+                {
+                    $(this.video_selector).addClass("hidden");
+                    $(this.video_selector).removeClass("visible");
+                    $(this.img_selector).addClass("visible");
+                    $(this.img_selector).removeClass("hidden");
+                    this.last_was_image = 0;
+                }
+            }
 
             this.iterator++;
         }
@@ -256,12 +355,30 @@ function changeNightMode()
         window.localStorage.setItem("nightmode", true);
     }
 }
+
+var mute = false;
+function changeMute()
+{
+    if(mute)
+    {
+        $("#video_player").attr("muted", false);
+        mute = false;
+        window.localStorage.setItem("mute_videos", false);
+    }
+    else
+    {
+        $("#video_player").attr("muted", true);
+        mute = true;
+        window.localStorage.setItem("mute_videos", true);
+    }
+}
     
 window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
-        window.localStorage.setItem("last_url", $("#menu_text").val())
-        window.localStorage.setItem("last_len", $("#menu_length").val())
-        window.localStorage.setItem("random",$("#randomize").is(":checked"))
+        window.localStorage.setItem("last_url",   $("#menu_text").val())
+        window.localStorage.setItem("last_len",   $("#menu_length").val())
+        window.localStorage.setItem("random",     $("#randomize").is(":checked"))
+        window.localStorage.setItem("mute_videos",$("#mute_videos").is(":checked") );
         arr = getImgArr("https://fgproxy1.herokuapp.com/" + $("#menu_text").val());
         if(arr.length != 0){
 
@@ -269,7 +386,17 @@ window.addEventListener("load",function(){
             $("#fgmenu").addClass("hidden");
             $("#fgmain").removeClass("hidden");
             $("#fgmenu").removeClass("visible");
-            fgm = new FgManager(arr,"img.display","img.preload",$("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").is(":checked"));
+            fgm = new FgManager(
+                arr,
+                "img#display",
+                "img#preload",
+                "video#video_player",
+                "video#video_preload",
+                $("div#text"),
+                new Beatbar($("#beatbar")),
+                parseInt($("#menu_length").val()),
+                $("#randomize").is(":checked"),
+                mute);
             
             requestAnimationFrame(main_loop);
         }else{
@@ -278,6 +405,7 @@ window.addEventListener("load",function(){
     });
 
     $("#night_mode").on("click",changeNightMode);
+    $("#mute_videos").on("click",changeMute);
 
     var last_url = window.localStorage.getItem("last_url")
     var last_len = window.localStorage.getItem("last_len")
@@ -289,6 +417,7 @@ window.addEventListener("load",function(){
     {
         $("#menu_length").val(last_len)
     }
+
     var mode = window.localStorage.getItem("nightmode");
     if( mode != null )
     {
@@ -298,12 +427,23 @@ window.addEventListener("load",function(){
             changeNightMode();
         }
     }
+
     var randomized = window.localStorage.getItem("random");
     if( randomized != null )
     {
-        if( randomized == "true" )
+        if( randomized == "true" || randomized == true )
         {
             $("#randomize").attr("checked", true);
+        }
+    }
+
+    var mute_videos = window.localStorage.getItem("mute_videos");
+    if( mute_videos != null )
+    {
+        if( mute_videos == "true" || mute_videos == true )
+        {
+            $("#mute_videos").attr("checked", true);
+            changeMute();
         }
     }
 })
