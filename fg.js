@@ -193,6 +193,7 @@ class FgManager{
             {
                 //preload next video
                 $(this.video_preload_selector + ">source").attr("src",this.dataarr[this.iterator+1].imgurl);
+                $(this.video_preload_selector)[0].muted = true;
             }
             else
             {
