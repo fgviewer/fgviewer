@@ -61,7 +61,7 @@ class Displayable
         {
             if(data_arr[0].endsWith(Displayable.video_formats[i]))
             {
-                is_video = true;
+                this.is_video = true;
                 break;
             }
         }
