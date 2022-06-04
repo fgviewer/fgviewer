@@ -167,7 +167,7 @@ class FgManager{
         this.img_selector = img_selector;
         this.preload_selector = preload_selector;
         this.video_selector = video_selector;
-        this.video_preload_selector
+        this.video_preload_selector = video_preload_selector;
         this.textobj = textjqobject;
         this.beatbar = beatbar;
         this.dataarr = arr;
