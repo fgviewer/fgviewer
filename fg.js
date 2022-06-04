@@ -52,14 +52,14 @@ function getImgArr(link){
 class Displayable
 {
     static video_formats = [".webm"]
-    constructor(dataarr)
+    constructor(data_arr)
     {
-        this.imgurl = datarr[0]
-        this.text = datarr[0]
+        this.imgurl = data_arr[0]
+        this.text = data_arr[1]
         this.is_video = false;
         Array.prototype.forEach(video_formats, function(format)
             {
-                if(datarr[0].endsWith(format))
+                if(data_arr[0].endsWith(format))
                 {
                     is_video = true;
                 }
