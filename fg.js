@@ -330,7 +330,7 @@ function changeNightMode()
     }
 }
 
-var mute = true;
+var mute = false;
 function changeMute()
 {
     if(mute)
