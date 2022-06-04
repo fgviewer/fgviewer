@@ -158,8 +158,8 @@ class FgManager{
         "extremely fast":140,
     }
 
-    constructor(arr,img_selector,preload_selector, textjqobject, beatbar, max_durration, randomized){
-
+    constructor(arr,img_selector,preload_selector, textjqobject, beatbar, max_durration, randomized)
+    {
         if(randomized)
         {
             arr = shuffle(arr);
@@ -176,26 +176,37 @@ class FgManager{
         this.iterator = -1;
         this.next_image_time = 0;
         this.max_durration = isNaN(max_durration) ? 20 * 1000 : max_durration * 1000;
+        this.is_next_video = false;
 
         this.queue_image();
         this.iterator++;
     }
 
-    queue_image(){
+    queue_image()
+    {
         if(this.dataarr.length > this.iterator+1){
-            
-            // preload next image
-            $(this.preload_selector).attr("src",arr[this.iterator+1][0]);
+
+            if(this.dataarr[this.iterator+1].is_video)
+            {
+                //preload next video
+                this.is_next_video = true;
+            }
+            else
+            {
+                // preload next image
+                $(this.preload_selector).attr("src",this.dataarr[this.iterator+1].imgurl);
+                this.is_next_video = false;
+            }
 
             // try pattern 1
-            var data = this.reexp.exec(arr[this.iterator+1][1]);
+            var data = this.reexp.exec(this.dataarr[this.iterator+1].text);
             
             // Some people write "normal" or "medium" (grip) and then specify speed.
             // Check if somebody didn't do that here.
             // If they did, use alt regex.
             if(data != null && (data[1] == "medium" || data[1] == "normal"))
             {
-                var alt = data = this.reexpalt.exec(arr[this.iterator+1][1]);
+                var alt = data = this.reexpalt.exec(this.dataarr[this.iterator+1].text);
                 if (alt != null)
                 {
                     data = alt;
@@ -204,7 +215,7 @@ class FgManager{
 
             if(data == null)
             {
-                data = this.reexpalt.exec(arr[this.iterator+1][1]);
+                data = this.reexpalt.exec(this.dataarr[this.iterator+1].text);
                 if(data != null)
                 {
                     tmp = data[2];
@@ -214,7 +225,8 @@ class FgManager{
             }
 
 
-            if(data != null){
+            if(data != null)
+            {
                 console.log(data);
                 var count = data[1];
                 var delay = 60000/FgManager.speeds[data[2]];
@@ -226,13 +238,15 @@ class FgManager{
                 this.next_text = data[3];
                 this.next_next_time = delay * count;
 
-            }else{
-                var count = 10+Math.ceil(Math.random()*40);
+            }
+            else
+            {
                 var delay = 60000/(40+Math.ceil(Math.random()*80));
-
+                var count = 10+Math.ceil(Math.random()* (this.max_durration/delay - 10));
+                
                 if (count * delay > this.max_durration)
                 {
-                    count = Math.ceil(this.max_durration /delay)
+                    count = Math.ceil(this.max_durration / delay)
                 }
                 this.beatbar.addToQueue(count,delay)
                 this.next_text = "";
