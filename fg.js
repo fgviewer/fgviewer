@@ -57,13 +57,14 @@ class Displayable
         this.imgurl = data_arr[0]
         this.text = data_arr[1]
         this.is_video = false;
-        Array.prototype.forEach(video_formats, function(format)
+        for(var i = 0; i< Displayable.video_formats.length(); i++)
+        {
+            if(data_arr[0].endsWith(Displayable.video_formats[i]))
             {
-                if(data_arr[0].endsWith(format))
-                {
-                    is_video = true;
-                }
-            } )
+                is_video = true;
+                break;
+            }
+        }
     }
 }
 
