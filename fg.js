@@ -57,7 +57,7 @@ class Displayable
         this.imgurl = data_arr[0]
         this.text = data_arr[1]
         this.is_video = false;
-        for(var i = 0; i< Displayable.video_formats.length(); i++)
+        for(var i = 0; i< Displayable.video_formats.length; i++)
         {
             if(data_arr[0].endsWith(Displayable.video_formats[i]))
             {
