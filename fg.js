@@ -41,7 +41,7 @@ function getImgArr(link){
         tmp = []
         tmp.push(imgurl);
         tmp.push(content);
-        arr.push(Displayable(tmp));
+        arr.push(new Displayable(tmp));
     });
 
     console.log(arr);
