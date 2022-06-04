@@ -193,7 +193,7 @@ class FgManager{
         // Some people write "normal" or "medium" (grip) and then specify speed.
         // Check if somebody didn't do that here.
         // If they did, use alt regex.
-        if(data != null && (data[2] == "medium" || data[2] == "normal") && (!data[3].includes("medium") || !data[3].includes("normal")) )
+        if(data != null && (data[2] == "medium" || data[2] == "normal") && !(data[3].includes("medium") || data[3].includes("normal")) )
         {
             var alt = regex_alt.exec(str);
             if (alt != null)
