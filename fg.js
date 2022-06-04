@@ -179,6 +179,7 @@ class FgManager{
         this.next_image_time = 0;
         this.max_durration = isNaN(max_durration) ? 20 * 1000 : max_durration * 1000;
         this.mute_video = mute_video;
+        this.last_was_image = -1;
 
 
         this.queue_image();
@@ -292,18 +293,26 @@ class FgManager{
                     // Browsers are tretarded.
                     $(this.video_selector)[0].muted = true;
                 }
-                $(this.img_selector).addClass("hidden");
-                $(this.img_selector).removeClass("visible");
-                $(this.video_selector).addClass("visible");
-                $(this.video_selector).removeClass("hidden");
+                if(this.last_was_image != 0)
+                {
+                    $(this.img_selector).addClass("hidden");
+                    $(this.img_selector).removeClass("visible");
+                    $(this.video_selector).addClass("visible");
+                    $(this.video_selector).removeClass("hidden");
+                    this.last_was_image = 0;
+                }
             }
             else
             {
                 $(this.img_selector).attr("src",to_display.imgurl)
-                $(this.video_selector).addClass("hidden");
-                $(this.video_selector).removeClass("visible");
-                $(this.img_selector).addClass("visible");
-                $(this.img_selector).removeClass("hidden");
+                if(this.last_was_image != 1)
+                {
+                    $(this.video_selector).addClass("hidden");
+                    $(this.video_selector).removeClass("visible");
+                    $(this.img_selector).addClass("visible");
+                    $(this.img_selector).removeClass("hidden");
+                    this.last_was_image = 0;
+                }
             }
 
             this.iterator++;
