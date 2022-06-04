@@ -27,8 +27,12 @@
                     <input type="checkbox" id="night_mode" value="nightmode" checked><br>
                 </div>
                 <div class="">
-                    <label for="menu_length">Random Order:</label><br>
+                    <label for="randomize">Random Order:</label><br>
                     <input type="checkbox" id="randomize" value="randomize"><br>
+                </div>
+                <div class="">
+                    <label for="mute_videos">Mute Videos:</label><br>
+                    <input type="checkbox" id="mute_videos" value="mute_videos"><br>
                 </div>
                 <div class="">
                     <input type="button" id="menu_submit" value="Start">
@@ -39,7 +43,10 @@
 
     <div class="flex_container hidden" id="fgmain">
         <div id="text"></div>
-        <video class="video_player hidden">
+        <video class="video_player hidden" id="video_player" autoplay muted>
+            <source id="video_source" src =""/>
+        </video>
+        <video class="video_player hidden" id="video_preload" autoplay muted>
             <source id="video_source" src =""/>
         </video>
         <img class="display visible" src="" />

@@ -158,7 +158,7 @@ class FgManager{
         "extremely fast":140,
     }
 
-    constructor(arr,img_selector,preload_selector, textjqobject, beatbar, max_durration, randomized)
+    constructor(arr,img_selector,preload_selector,video_selector, textjqobject, beatbar, max_durration, randomized)
     {
         if(randomized)
         {
@@ -166,6 +166,8 @@ class FgManager{
         }
         this.img_selector = img_selector;
         this.preload_selector = preload_selector;
+        this.video_selector = video_selector;
+        this.video_preload_selector
         this.textobj = textjqobject;
         this.beatbar = beatbar;
         this.dataarr = arr;
@@ -189,13 +191,12 @@ class FgManager{
             if(this.dataarr[this.iterator+1].is_video)
             {
                 //preload next video
-                this.is_next_video = true;
+                $(this.video_preload_selector + ">source").attr("src",this.dataarr[this.iterator+1].imgurl);
             }
             else
             {
                 // preload next image
                 $(this.preload_selector).attr("src",this.dataarr[this.iterator+1].imgurl);
-                this.is_next_video = false;
             }
 
             // try pattern 1
@@ -270,7 +271,23 @@ class FgManager{
             }
             this.textobj.css("font-size",window.height/21+"px");
             this.queue_image();
-            $(this.img_selector).attr("src",this.dataarr[this.iterator][0])
+            var to_display = this.dataarr[this.iterator];
+            if(to_display.is_video)
+            {
+                $(this.video_selector).attr("src",to_display.imgurl)
+                $(this.img_selector).addClass("hidden");
+                $(this.img_selector).removeClass("visible");
+                $(this.video_selector).addClass("visible");
+                $(this.video_selector).removeClass("hidden");
+            }
+            else
+            {
+                $(this.img_selector).attr("src",to_display.imgurl)
+                $(this.video_selector).addClass("hidden");
+                $(this.video_selector).removeClass("visible");
+                $(this.img_selector).addClass("visible");
+                $(this.img_selector).removeClass("hidden");
+            }
 
             this.iterator++;
         }
@@ -312,6 +329,23 @@ function changeNightMode()
         window.localStorage.setItem("nightmode", true);
     }
 }
+
+var mute = true;
+function changeMute()
+{
+    if(mute)
+    {
+        $("#video_player").attr("muted", false);
+        nightmode = false;
+        window.localStorage.setItem("mute_videos", false);
+    }
+    else
+    {
+        $("#video_player").attr("muted", true);
+        mute = true;
+        window.localStorage.setItem("mute_videos", true);
+    }
+}
     
 window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
@@ -325,7 +359,7 @@ window.addEventListener("load",function(){
             $("#fgmenu").addClass("hidden");
             $("#fgmain").removeClass("hidden");
             $("#fgmenu").removeClass("visible");
-            fgm = new FgManager(arr,"img.display","img.preload",$("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").is(":checked"));
+            fgm = new FgManager(arr,"img.display","img.preload","video#video_player",$("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").is(":checked"));
             
             requestAnimationFrame(main_loop);
         }else{
@@ -334,6 +368,7 @@ window.addEventListener("load",function(){
     });
 
     $("#night_mode").on("click",changeNightMode);
+    $("#mute_videos").on("click",changeMute);
 
     var last_url = window.localStorage.getItem("last_url")
     var last_len = window.localStorage.getItem("last_len")
@@ -345,6 +380,7 @@ window.addEventListener("load",function(){
     {
         $("#menu_length").val(last_len)
     }
+
     var mode = window.localStorage.getItem("nightmode");
     if( mode != null )
     {
@@ -354,12 +390,23 @@ window.addEventListener("load",function(){
             changeNightMode();
         }
     }
+
     var randomized = window.localStorage.getItem("random");
     if( randomized != null )
     {
         if( randomized == "true" )
         {
             $("#randomize").attr("checked", true);
+        }
+    }
+
+    var mute_videos = window.localStorage.getItem("mute_videos");
+    if( mute_videos != null )
+    {
+        if( mute_videos == "true" )
+        {
+            $("#mute_videos").attr("checked", true);
+            changeMute();
         }
     }
 })
