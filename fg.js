@@ -213,6 +213,9 @@ class FgManager{
                 if (alt != null)
                 {
                     data = alt;
+                    tmp = data[2];
+                    data[2] = data[3];
+                    data[3] = tmp;
                 }
             }
 
