@@ -185,6 +185,40 @@ class FgManager{
         this.iterator++;
     }
 
+    extract_data_from_string(str, regex, regex_alt)
+    {
+        // try pattern 1
+        var data = regex.exec(str);
+                    
+        // Some people write "normal" or "medium" (grip) and then specify speed.
+        // Check if somebody didn't do that here.
+        // If they did, use alt regex.
+        if(data != null && (data[2] == "medium" || data[2] == "normal") && (!data[3].includes("medium") || !data[3].includes("normal")) )
+        {
+            var alt = regex_alt.exec(str);
+            if (alt != null)
+            {
+                data = alt;
+                tmp = data[2];
+                data[2] = data[3];
+                data[3] = tmp;
+            }
+        }
+
+        if(data == null)
+        {
+            data = regex_alt.exec(str);
+            if(data != null)
+            {
+                tmp = data[2];
+                data[2] = data[3];
+                data[3] = tmp;
+            }
+        }
+
+        return data;
+    }
+
     queue_image()
     {
         if(this.dataarr.length > this.iterator+1){
@@ -201,35 +235,7 @@ class FgManager{
                 $(this.preload_selector).attr("src",this.dataarr[this.iterator+1].imgurl);
             }
 
-            // try pattern 1
-            var data = this.reexp.exec(this.dataarr[this.iterator+1].text);
-            
-            // Some people write "normal" or "medium" (grip) and then specify speed.
-            // Check if somebody didn't do that here.
-            // If they did, use alt regex.
-            if(data != null && (data[2] == "medium" || data[2] == "normal"))
-            {
-                var alt = data = this.reexpalt.exec(this.dataarr[this.iterator+1].text);
-                if (alt != null)
-                {
-                    data = alt;
-                    tmp = data[2];
-                    data[2] = data[3];
-                    data[3] = tmp;
-                }
-            }
-
-            if(data == null)
-            {
-                data = this.reexpalt.exec(this.dataarr[this.iterator+1].text);
-                if(data != null)
-                {
-                    tmp = data[2];
-                    data[2] = data[3];
-                    data[3] = tmp;
-                }
-            }
-
+            var data = this.extract_data_from_string(this.dataarr[this.iterator+1].text, this.reexp, this.reexpalt)
 
             if(data != null)
             {
