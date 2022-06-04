@@ -51,7 +51,7 @@ function getImgArr(link){
 
 class Displayable
 {
-    static video_formats = [".webm"]
+    static video_formats = [".webm",".mp4",".mkv"]
     constructor(data_arr)
     {
         this.imgurl = data_arr[0]
