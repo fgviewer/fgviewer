@@ -41,12 +41,30 @@ function getImgArr(link){
         tmp = []
         tmp.push(imgurl);
         tmp.push(content);
-        arr.push(tmp);
+        arr.push(Displayable(tmp));
     });
 
     console.log(arr);
 
     return arr;
+}
+
+class Displayable
+{
+    static video_formats = [".webm"]
+    constructor(dataarr)
+    {
+        this.imgurl = datarr[0]
+        this.text = datarr[0]
+        this.is_video = false;
+        Array.prototype.forEach(video_formats, function(format)
+            {
+                if(datarr[0].endsWith(format))
+                {
+                    is_video = true;
+                }
+            } )
+    }
 }
 
 class Beat
@@ -127,6 +145,7 @@ class Beatbar{
 }
 
 class FgManager{
+    
     static speeds = {//strokes per minute; adjust
         "very slow":20,
         "slow":40,
@@ -137,6 +156,7 @@ class FgManager{
         "extreme fast":140,
         "extremely fast":140,
     }
+
     constructor(arr,img_selector,preload_selector, textjqobject, beatbar, max_durration, randomized){
 
         if(randomized)
@@ -159,10 +179,28 @@ class FgManager{
         this.queue_image();
         this.iterator++;
     }
+
     queue_image(){
         if(this.dataarr.length > this.iterator+1){
+            
+            // preload next image
             $(this.preload_selector).attr("src",arr[this.iterator+1][0]);
+
+            // try pattern 1
             var data = this.reexp.exec(arr[this.iterator+1][1]);
+            
+            // Some people write "normal" or "medium" (grip) and then specify speed.
+            // Check if somebody didn't do that here.
+            // If they did, use alt regex.
+            if(data != null && (data[1] == "medium" || data[1] == "normal"))
+            {
+                var alt = data = this.reexpalt.exec(arr[this.iterator+1][1]);
+                if (alt != null)
+                {
+                    data = alt;
+                }
+            }
+
             if(data == null)
             {
                 data = this.reexpalt.exec(arr[this.iterator+1][1]);
@@ -173,6 +211,8 @@ class FgManager{
                     data[3] = tmp;
                 }
             }
+
+
             if(data != null){
                 console.log(data);
                 var count = data[1];
@@ -199,6 +239,7 @@ class FgManager{
             }
         }
     }
+
     fglogic(){
         if(Date.now()-this.last_image_time > this.next_image_time && this.iterator < this.dataarr.length){
 
