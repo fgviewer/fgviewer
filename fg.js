@@ -336,7 +336,7 @@ function changeMute()
     if(mute)
     {
         $("#video_player").attr("muted", false);
-        nightmode = false;
+        mute = false;
         window.localStorage.setItem("mute_videos", false);
     }
     else
