@@ -158,7 +158,7 @@ class FgManager{
         "extremely fast":140,
     }
 
-    constructor(arr,img_selector,preload_selector,video_selector, video_preload_selector, textjqobject, beatbar, max_durration, randomized)
+    constructor(arr,img_selector,preload_selector,video_selector, video_preload_selector, textjqobject, beatbar, max_durration, randomized, mute_video)
     {
         if(randomized)
         {
@@ -178,7 +178,8 @@ class FgManager{
         this.iterator = -1;
         this.next_image_time = 0;
         this.max_durration = isNaN(max_durration) ? 20 * 1000 : max_durration * 1000;
-        this.is_next_video = false;
+        this.mute_video = mute_video;
+
 
         this.queue_image();
         this.iterator++;
@@ -275,6 +276,12 @@ class FgManager{
             if(to_display.is_video)
             {
                 $(this.video_selector).attr("src",to_display.imgurl)
+                if(this.mute_video)
+                {
+                    // Why is this needed...
+                    // Browsers are tretarded.
+                    $(this.video_selector)[0].muted = true;
+                }
                 $(this.img_selector).addClass("hidden");
                 $(this.img_selector).removeClass("visible");
                 $(this.video_selector).addClass("visible");
@@ -360,7 +367,17 @@ window.addEventListener("load",function(){
             $("#fgmenu").addClass("hidden");
             $("#fgmain").removeClass("hidden");
             $("#fgmenu").removeClass("visible");
-            fgm = new FgManager(arr,"img#display","img#preload","video#video_player", "video#video_preload", $("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").is(":checked"));
+            fgm = new FgManager(
+                arr,
+                "img#display",
+                "img#preload",
+                "video#video_player",
+                "video#video_preload",
+                $("div#text"),
+                new Beatbar($("#beatbar")),
+                parseInt($("#menu_length").val()),
+                $("#randomize").is(":checked"),
+                mute);
             
             requestAnimationFrame(main_loop);
         }else{
