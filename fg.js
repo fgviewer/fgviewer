@@ -349,9 +349,10 @@ function changeMute()
     
 window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
-        window.localStorage.setItem("last_url", $("#menu_text").val())
-        window.localStorage.setItem("last_len", $("#menu_length").val())
-        window.localStorage.setItem("random",$("#randomize").is(":checked"))
+        window.localStorage.setItem("last_url",   $("#menu_text").val())
+        window.localStorage.setItem("last_len",   $("#menu_length").val())
+        window.localStorage.setItem("random",     $("#randomize").is(":checked"))
+        window.localStorage.setItem("mute_videos",$("#mute_videos").is(":checked") );
         arr = getImgArr("https://fgproxy1.herokuapp.com/" + $("#menu_text").val());
         if(arr.length != 0){
 
@@ -394,7 +395,7 @@ window.addEventListener("load",function(){
     var randomized = window.localStorage.getItem("random");
     if( randomized != null )
     {
-        if( randomized == "true" )
+        if( randomized == "true" || randomized == true )
         {
             $("#randomize").attr("checked", true);
         }
@@ -403,7 +404,7 @@ window.addEventListener("load",function(){
     var mute_videos = window.localStorage.getItem("mute_videos");
     if( mute_videos != null )
     {
-        if( mute_videos == "true" )
+        if( mute_videos == "true" || mute_videos == true )
         {
             $("#mute_videos").attr("checked", true);
             changeMute();
