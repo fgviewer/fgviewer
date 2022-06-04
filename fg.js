@@ -120,7 +120,7 @@ class Beatbar{
                 //i++; I don't think this increment is neccesary, another object will be at same index after splicing
                 continue;
             }
-            if(distance < this.beatbartimelength){
+            if(distance < this.beatbartimelength + 0.5*height){
                 this.context.arc(centerw+centerw*(distance/this.beatbartimelength),centerh,0.4*height,0,2*Math.PI);
                 this.context.fill();
             };
