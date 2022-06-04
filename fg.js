@@ -172,8 +172,8 @@ class FgManager{
         this.beatbar = beatbar;
         this.dataarr = arr;
         this.stopflag=false;
-        this.reexp = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast), ([a-zA-Z0-9 ]+)");
-        this.reexpalt = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), ([a-zA-Z0-9 ]+), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast)");
+        this.reexp = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast), ([^,]+)");
+        this.reexpalt = RegExp("([1-9]|[1-9][0-9]|1[0-9][0-9]), ([^,]+), (very slow|slow|normal|medium|fast|very fast|extreme?ly fast)");
         this.last_image_time = Date.now();
         this.iterator = -1;
         this.next_image_time = 0;
@@ -207,7 +207,7 @@ class FgManager{
             // Some people write "normal" or "medium" (grip) and then specify speed.
             // Check if somebody didn't do that here.
             // If they did, use alt regex.
-            if(data != null && (data[1] == "medium" || data[1] == "normal"))
+            if(data != null && (data[2] == "medium" || data[2] == "normal"))
             {
                 var alt = data = this.reexpalt.exec(this.dataarr[this.iterator+1].text);
                 if (alt != null)
