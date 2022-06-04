@@ -359,7 +359,7 @@ window.addEventListener("load",function(){
             $("#fgmenu").addClass("hidden");
             $("#fgmain").removeClass("hidden");
             $("#fgmenu").removeClass("visible");
-            fgm = new FgManager(arr,"img#display","img#preload","video#video_player", "video#video_preload" $("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").is(":checked"));
+            fgm = new FgManager(arr,"img#display","img#preload","video#video_player", "video#video_preload", $("div#text"),new Beatbar($("#beatbar")), parseInt($("#menu_length").val()),$("#randomize").is(":checked"));
             
             requestAnimationFrame(main_loop);
         }else{
