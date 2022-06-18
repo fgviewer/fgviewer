@@ -372,6 +372,55 @@ function changeMute()
         window.localStorage.setItem("mute_videos", true);
     }
 }
+
+function process_pace()
+{
+    var paces = $(".pace_element")
+    var dic = {};
+    paces.each(function(i,obj) {
+        dic[obj.children(".pace_name").val] = obj.children(".pace_speed").val;
+    })
+    return dic;
+}
+
+function prepare_pace_menu()
+{
+    $("#pace_toggle").on("click", function()
+    {
+        if($("#pace_toggle").html() == "show")
+        {
+            $("#pace_toggle").html("hide")
+            $("#pace_body").removeClass("hidden")
+            $("#pace_body").addClass("visible")
+        }
+        else
+        {
+            $("#pace_toggle").html("show")
+            $("#pace_body").removeClass("visible")
+            $("#pace_body").addClass("hidden")
+        }
+    })
+
+    var dic = window.localStorage.getItem("pace_dictionary");
+    
+    if(dic == null)
+    {
+        dic = {//strokes per minute
+            "very slow":20,
+            "slow":40,
+            "normal":60,
+            "medium":60,
+            "fast":80,
+            "very fast":100,
+            "extreme fast":140,
+            "extremely fast":140,
+        };
+    }
+
+    for (const [key, value] of Object.entries(dic)) {
+        var table = $("#pace_table")
+      }
+}
     
 window.addEventListener("load",function(){
     $("#menu_submit").on("click",function(){
@@ -446,4 +495,6 @@ window.addEventListener("load",function(){
             changeMute();
         }
     }
+
+    prepare_pace_menu()
 })
