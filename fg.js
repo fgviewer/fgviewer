@@ -379,7 +379,7 @@ window.addEventListener("load",function(){
         window.localStorage.setItem("last_len",   $("#menu_length").val())
         window.localStorage.setItem("random",     $("#randomize").is(":checked"))
         window.localStorage.setItem("mute_videos",$("#mute_videos").is(":checked") );
-        arr = getImgArr("https://fgproxy1.herokuapp.com/" + $("#menu_text").val());
+        arr = getImgArr("https://fgproxy1.onrender.com/" + $("#menu_text").val());
         if(arr.length != 0){
 
             $("#fgmain").addClass("visible");
